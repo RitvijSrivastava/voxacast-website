@@ -1,0 +1,9 @@
+# AGENTS.md file
+AGENTS.md
+
+# Common ignores
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp

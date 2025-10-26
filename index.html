@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoxaCast - Discover Voices That Matter</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Space Mono", monospace;
+        background: #0a0a0a;
+        color: #ffffff;
+        overflow: hidden;
+        height: 100vh;
+        position: relative;
+      }
+
+      /* Dotted background pattern */
+      .dot-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+        background-size: 30px 30px;
+        opacity: 0.03;
+        z-index: 0;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem 0;
+        border-bottom: 3px solid #ffffff;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 1.8rem;
+        color: #0a0a0a;
+        font-family: "Bebas Neue", cursive;
+        clip-path: polygon(
+          30% 0%,
+          70% 0%,
+          100% 30%,
+          100% 70%,
+          70% 100%,
+          30% 100%,
+          0% 70%,
+          0% 30%
+        );
+      }
+
+      .logo-text {
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: 3px;
+        font-family: "Bebas Neue", cursive;
+      }
+
+      nav {
+        display: flex;
+        gap: 2.5rem;
+        align-items: center;
+      }
+
+      nav a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        position: relative;
+      }
+
+      nav a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #ffffff;
+        transition: width 0.3s;
+      }
+
+      nav a:hover::after {
+        width: 100%;
+      }
+
+      /* Main Content */
+      main {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        position: relative;
+      }
+
+      .content-left {
+        position: relative;
+        z-index: 5;
+      }
+
+      .year-badge {
+        display: inline-block;
+        border: 2px solid #ffffff;
+        padding: 0.5rem 1.5rem;
+        font-size: 0.85rem;
+        letter-spacing: 3px;
+        margin-bottom: 2rem;
+        font-weight: 700;
+      }
+
+      .content-left h1 {
+        font-size: 5.5rem;
+        font-weight: 900;
+        line-height: 0.95;
+        margin-bottom: 2rem;
+        letter-spacing: -3px;
+        font-family: "Bebas Neue", cursive;
+      }
+
+      .outline-text {
+        -webkit-text-stroke: 2px #ffffff;
+        -webkit-text-fill-color: transparent;
+        text-stroke: 2px #ffffff;
+        text-fill-color: transparent;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        color: #cccccc;
+        margin-bottom: 3rem;
+        line-height: 1.8;
+        max-width: 500px;
+        letter-spacing: 0.5px;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        background: #ffffff;
+        color: #0a0a0a;
+        padding: 1.3rem 3rem;
+        border: none;
+        text-decoration: none;
+        font-weight: 900;
+        font-size: 1rem;
+        transition: all 0.3s;
+        letter-spacing: 2px;
+        font-family: "Space Mono", monospace;
+        clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+        position: relative;
+      }
+
+      .cta-button::before {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        background: #ffffff;
+        clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .cta-button:hover {
+        transform: translate(-3px, -3px);
+      }
+
+      .cta-button:hover::before {
+        opacity: 0.3;
+      }
+
+      /* Vinyl Record Player with Illustrations */
+      .content-right {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .record-player {
+        position: relative;
+        width: 450px;
+        height: 450px;
+      }
+
+      /* Vinyl Record */
+      .vinyl-record {
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at center,
+          #0a0a0a 0%,
+          #0a0a0a 22%,
+          #ffffff 22%,
+          #ffffff 24%,
+          #0a0a0a 24%,
+          #0a0a0a 100%
+        );
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 8s linear infinite;
+        border: 8px solid #1a1a1a;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .vinyl-record::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 5px solid #0a0a0a;
+      }
+
+      .vinyl-record::after {
+        content: "VoxaCast";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.7rem;
+        font-weight: 900;
+        color: #0a0a0a;
+        letter-spacing: 1px;
+      }
+
+      /* Grooves on vinyl */
+      .groove {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .groove:nth-child(1) {
+        width: 88%;
+        height: 88%;
+      }
+      .groove:nth-child(2) {
+        width: 80%;
+        height: 80%;
+      }
+      .groove:nth-child(3) {
+        width: 72%;
+        height: 72%;
+      }
+      .groove:nth-child(4) {
+        width: 64%;
+        height: 64%;
+      }
+      .groove:nth-child(5) {
+        width: 56%;
+        height: 56%;
+      }
+      .groove:nth-child(6) {
+        width: 48%;
+        height: 48%;
+      }
+      .groove:nth-child(7) {
+        width: 40%;
+        height: 40%;
+      }
+
+      @keyframes spin {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      /* Tone Arm */
+      .tone-arm {
+        position: absolute;
+        top: 15%;
+        right: 8%;
+        width: 180px;
+        height: 8px;
+        background: #ffffff;
+        transform-origin: right center;
+        transform: rotate(-40deg);
+        z-index: 10;
+      }
+
+      .tone-arm::before {
+        content: "";
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        background: #ffffff;
+        border-radius: 50%;
+      }
+
+      .tone-arm::after {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-right: 18px solid #ffffff;
+      }
+
+      /* Decorative illustrations */
+      .illustration {
+        position: absolute;
+        border: 3px solid #ffffff;
+        background: #0a0a0a;
+      }
+
+      /* Cassette tape */
+      .cassette {
+        width: 140px;
+        height: 90px;
+        top: -5%;
+        left: -10%;
+        clip-path: polygon(
+          8% 0%,
+          92% 0%,
+          100% 8%,
+          100% 92%,
+          92% 100%,
+          8% 100%,
+          0% 92%,
+          0% 8%
+        );
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .cassette-detail {
+        position: absolute;
+        background: #ffffff;
+      }
+
+      .cassette .circle-left {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: 3px solid #ffffff;
+        top: 25px;
+        left: 20px;
+      }
+
+      .cassette .circle-right {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: 3px solid #ffffff;
+        top: 25px;
+        right: 20px;
+      }
+
+      .cassette .window {
+        width: 70px;
+        height: 35px;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: transparent;
+        border: 2px solid #ffffff;
+      }
+
+      .cassette .label {
+        width: 100px;
+        height: 2px;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* Headphones */
+      .headphones {
+        width: 120px;
+        height: 120px;
+        bottom: 5%;
+        right: -5%;
+        border-radius: 50% 50% 0 0;
+        border-bottom: none;
+        animation: float 5s ease-in-out infinite;
+        animation-delay: 1s;
+      }
+
+      .headphones::before {
+        content: "";
+        position: absolute;
+        width: 30px;
+        height: 40px;
+        background: #0a0a0a;
+        border: 3px solid #ffffff;
+        border-radius: 8px;
+        bottom: -5px;
+        left: 10px;
+      }
+
+      .headphones::after {
+        content: "";
+        position: absolute;
+        width: 30px;
+        height: 40px;
+        background: #0a0a0a;
+        border: 3px solid #ffffff;
+        border-radius: 8px;
+        bottom: -5px;
+        right: 10px;
+      }
+
+      /* Microphone */
+      .microphone {
+        width: 50px;
+        height: 100px;
+        top: 10%;
+        right: -8%;
+        border-radius: 25px 25px 8px 8px;
+        animation: float 7s ease-in-out infinite;
+        animation-delay: 2s;
+      }
+
+      .microphone::before {
+        content: "";
+        position: absolute;
+        width: 3px;
+        height: 30px;
+        background: #ffffff;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .microphone::after {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 3px;
+        background: #ffffff;
+        bottom: -33px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .mic-grid {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+      }
+
+      .mic-dot {
+        width: 6px;
+        height: 6px;
+        background: #ffffff;
+        border-radius: 50%;
+      }
+
+      /* Waveform display */
+      .waveform-box {
+        position: absolute;
+        bottom: -8%;
+        left: -8%;
+        width: 160px;
+        height: 80px;
+        border: 3px solid #ffffff;
+        background: #0a0a0a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 1rem;
+        animation: float 5.5s ease-in-out infinite;
+        animation-delay: 0.5s;
+      }
+
+      .wave-line {
+        width: 3px;
+        background: #ffffff;
+        animation: wave-pulse 1.2s ease-in-out infinite;
+      }
+
+      .wave-line:nth-child(1) {
+        height: 20px;
+        animation-delay: 0s;
+      }
+      .wave-line:nth-child(2) {
+        height: 35px;
+        animation-delay: 0.1s;
+      }
+      .wave-line:nth-child(3) {
+        height: 45px;
+        animation-delay: 0.2s;
+      }
+      .wave-line:nth-child(4) {
+        height: 30px;
+        animation-delay: 0.3s;
+      }
+      .wave-line:nth-child(5) {
+        height: 50px;
+        animation-delay: 0.4s;
+      }
+      .wave-line:nth-child(6) {
+        height: 25px;
+        animation-delay: 0.5s;
+      }
+      .wave-line:nth-child(7) {
+        height: 40px;
+        animation-delay: 0.6s;
+      }
+      .wave-line:nth-child(8) {
+        height: 35px;
+        animation-delay: 0.7s;
+      }
+
+      @keyframes wave-pulse {
+        0%,
+        100% {
+          transform: scaleY(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scaleY(0.6);
+          opacity: 0.7;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      /* Info badge */
+      .info-badge {
+        position: absolute;
+        background: #ffffff;
+        color: #0a0a0a;
+        padding: 0.8rem 1.5rem;
+        font-weight: 900;
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .badge-1 {
+        top: 50%;
+        right: -12%;
+        animation-delay: 1.5s;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        main {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 2rem 0;
+        }
+
+        .content-left h1 {
+          font-size: 4.5rem;
+        }
+
+        .content-right {
+          display: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1.5rem;
+        }
+
+        header {
+          padding: 1.5rem 0;
+        }
+
+        .logo-text {
+          font-size: 1.5rem;
+        }
+
+        nav {
+          gap: 1.5rem;
+        }
+
+        nav a {
+          font-size: 0.75rem;
+        }
+
+        .content-left h1 {
+          font-size: 3.5rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+          margin-bottom: 2rem;
+        }
+
+        .cta-button {
+          padding: 1.1rem 2.5rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .logo-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1.5rem;
+        }
+
+        .logo-text {
+          font-size: 1.3rem;
+        }
+
+        nav {
+          gap: 1rem;
+        }
+
+        nav a {
+          font-size: 0.65rem;
+        }
+
+        .content-left h1 {
+          font-size: 2.8rem;
+        }
+
+        .year-badge {
+          font-size: 0.7rem;
+          padding: 0.4rem 1rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+        }
+
+        .cta-button {
+          width: 100%;
+          justify-content: center;
+          font-size: 0.85rem;
+          padding: 1rem 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dot-pattern"></div>
+
+    <div class="container">
+      <header>
+        <div class="logo">
+          <div class="logo-icon">V</div>
+          <span class="logo-text">VOXACAST</span>
+        </div>
+        <!-- <nav>
+                <a href="#features">FEATURES</a>
+                <a href="#about">ABOUT</a>
+                <a href="#contact">CONTACT</a>
+            </nav> -->
+      </header>
+
+      <main>
+        <div class="content-left">
+          <div class="year-badge">EST. 2025</div>
+
+          <h1>
+            DISCOVER<br />
+            <span class="outline-text">VOICES</span><br />
+            THAT MATTER
+          </h1>
+
+          <p class="subtitle">
+            Stream thousands of podcasts, explore new stories, and connect with
+            authentic voices from around the world. All in one beautiful
+            retro-styled app.
+          </p>
+
+          <a href="#" class="cta-button">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 20.5V3.5C3 2.91 3.34 2.39 3.84 2.15L13.69 12L3.84 21.85C3.34 21.6 3 21.09 3 20.5Z"
+                fill="currentColor"
+              />
+              <path
+                d="M16.81 15.12L6.05 21.34L14.54 12.85L16.81 15.12Z"
+                fill="currentColor"
+              />
+              <path
+                d="M20.16 10.81C20.5 11.08 20.75 11.5 20.75 12C20.75 12.5 20.53 12.9 20.18 13.18L17.89 14.5L15.39 12L17.89 9.5L20.16 10.81Z"
+                fill="currentColor"
+              />
+              <path
+                d="M6.05 2.66L16.81 8.88L14.54 11.15L6.05 2.66Z"
+                fill="currentColor"
+              />
+            </svg>
+            GET ON GOOGLE PLAY
+          </a>
+        </div>
+
+        <div class="content-right">
+          <div class="record-player">
+            <!-- Vinyl Record -->
+            <div class="vinyl-record">
+              <div class="groove"></div>
+              <div class="groove"></div>
+              <div class="groove"></div>
+              <div class="groove"></div>
+              <div class="groove"></div>
+              <div class="groove"></div>
+              <div class="groove"></div>
+            </div>
+
+            <!-- Tone Arm -->
+            <div class="tone-arm"></div>
+
+            <!-- Cassette Tape -->
+            <div class="illustration cassette">
+              <div class="cassette-detail circle-left"></div>
+              <div class="cassette-detail circle-right"></div>
+              <div class="cassette-detail window"></div>
+              <div class="cassette-detail label"></div>
+            </div>
+
+            <!-- Headphones -->
+            <div class="illustration headphones"></div>
+
+            <!-- Microphone -->
+            <div class="illustration microphone">
+              <div class="mic-grid">
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+                <div class="mic-dot"></div>
+              </div>
+            </div>
+
+            <!-- Waveform Display -->
+            <div class="illustration waveform-box">
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+              <div class="wave-line"></div>
+            </div>
+
+            <!-- Info Badge -->
+            <div class="info-badge badge-1">NOW PLAYING</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
